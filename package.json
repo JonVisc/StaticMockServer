@@ -1,0 +1,14 @@
+{
+  "name": "StaticMockServer",
+  "version": "0.0.1",
+  "description": "A Mock Server using JSON as an input",
+  "main": "index.js",
+  "author": "Romo",
+  "license": "MIT",
+  "dependencies": {
+    "@koa/cors": "2",
+    "colors": "^1.1.2",
+    "koa": "^2.4.1",
+    "koa-router": "^7.3.0"
+  }
+}
