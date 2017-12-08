@@ -1,6 +1,7 @@
 'use strict';
 
-const Router = require('koa-router');
+const colors = require('colors'),
+    Router = require('koa-router');
 
 const common = require('../common/common');
 
@@ -10,6 +11,7 @@ let router = new Router();
 function defaultResponse(route, routeData) {
     console.log(`${routeData.type.toUpperCase()} - ${route}`.info);
     return async function(ctx, next) {
+        console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.cyan);
         if (routeData.headers && routeData.headers.length > 0) {
             routeData.headers.forEach(header => {
                 ctx.set(header);
