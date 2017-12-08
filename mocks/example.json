@@ -15,6 +15,11 @@
             "key": "post return value"
         }
     },
+    "exampleDelay": {
+        "type": "post",
+        "latency": 1500,
+        "body": "returned after 1500 milli"
+    },
     "multilevel/example": {
         "type": "get",
         "body": {

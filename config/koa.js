@@ -2,6 +2,8 @@
 
 const Router = require('koa-router');
 
+const common = require('../common/common');
+
 let router = new Router();
 
 
@@ -12,6 +14,9 @@ function defaultResponse(route, routeData) {
             routeData.headers.forEach(header => {
                 ctx.set(header);
             });
+        }
+        if (routeData.latency) {
+            await common.wait(routeData.latency);
         }
         ctx.body = routeData.body;
         ctx.status = 200;
