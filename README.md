@@ -45,3 +45,7 @@ Start Server
 ```bash
 $ node index.js mocks/example.json
 ```
+or
+```bash
+gulp
+```

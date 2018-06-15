@@ -1,27 +1,31 @@
 {
-  "name": "StaticMockServer",
-  "version": "0.1.0",
-  "description": "A Mock Server using JSON as an input.  Created with Koa & Koa Router.",
-  "main": "index.js",
-  "author": "Jon Romanowski",
-  "license": "MIT",
-  "dependencies": {
-    "@koa/cors": "2",
-    "colors": "^1.1.2",
-    "koa": "^2.4.1",
-    "koa-router": "^7.3.0"
-  },
-  "keywords": [
-      "server",
-      "mock",
-      "JSON",
-      "static",
-      "REST",
-      "API",
-      "test",
-      "testing",
-      "rest",
-      "data"
+    "name": "StaticMockServer",
+    "version": "0.1.0",
+    "description": "A Mock Server using JSON as an input.  Created with Koa & Koa Router.",
+    "main": "index.js",
+    "author": "Jon Romanowski",
+    "license": "MIT",
+    "dependencies": {
+        "@koa/cors": "2",
+        "colors": "^1.1.2",
+        "gulp": "^3.9.1",
+        "gulp-livereload": "^3.8.1",
+        "gulp-nodemon": "^2.2.1",
+        "gulp-notify": "^3.2.0",
+        "koa": "^2.4.1",
+        "koa-router": "^7.3.0"
+    },
+    "keywords": [
+        "server",
+        "mock",
+        "JSON",
+        "static",
+        "REST",
+        "API",
+        "test",
+        "testing",
+        "rest",
+        "data"
     ],
     "bugs": {
         "url": "https://github.com/JonVisc/StaticMockServer/issues"

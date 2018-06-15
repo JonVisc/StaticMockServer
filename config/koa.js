@@ -11,7 +11,16 @@ let router = new Router();
 function defaultResponse(route, routeData) {
     console.log(`${routeData.type.toUpperCase()} - ${route}`.info);
     return async function(ctx, next) {
-        console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.cyan);
+        let code = 200;
+        console.dir('routeData');
+        console.dir(routeData);
+        if (routeData.code && routeData.code !== 200) {
+            console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.red);
+            code = routeData.code;
+        } else {
+            console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.cyan);
+        }
+
         if (routeData.headers && routeData.headers.length > 0) {
             routeData.headers.forEach(header => {
                 ctx.set(header);
@@ -21,7 +30,7 @@ function defaultResponse(route, routeData) {
             await common.wait(routeData.latency);
         }
         ctx.body = routeData.body;
-        ctx.status = 200;
+        ctx.status = code;
     };
 }
 
