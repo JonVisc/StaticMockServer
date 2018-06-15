@@ -8,7 +8,7 @@ gulp.task('default', () => {
     livereload.listen();
     nodemon({
         script: 'index.js',
-        args: ['mocks/Sales-1.json'],
+        args: ['mocks/example.json'],
         ignore: ['node_modules/**']
     })
     .on('log', (event) => {
