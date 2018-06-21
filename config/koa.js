@@ -34,16 +34,25 @@ function defaultResponse(route, routeData) {
     };
 }
 
+function createRoute(route, routeBlock) {
+    if (routeBlock.type === 'post') {
+        router.post(`/${route}`, defaultResponse(route, routeBlock));
+    }
+
+    if (routeBlock.type === 'get') {
+        router.get(`/${route}`, defaultResponse(route, routeBlock));
+    }
+}
+
 module.exports = function(app, json) {
 
     for (const route in json) {
-
-        if (json[route].type === 'post') {
-            router.post(`/${route}`, defaultResponse(route, json[route]));
-        }
-
-        if (json[route].type === 'get') {
-            router.get(`/${route}`, defaultResponse(route, json[route]));
+        if (Array.isArray(json[route])) {
+            json[route].forEach((iterativeRoute) => {
+                createRoute(route, iterativeRoute);
+            });
+        } else {
+            createRoute(route, json[route]);
         }
     }
 
