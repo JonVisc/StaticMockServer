@@ -21,11 +21,13 @@
         "JSON",
         "static",
         "REST",
+        "node"
         "API",
         "test",
         "testing",
         "rest",
-        "data"
+        "data",
+        "lightweight"
     ],
     "bugs": {
         "url": "https://github.com/JonVisc/StaticMockServer/issues"
