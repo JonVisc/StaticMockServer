@@ -43,6 +43,21 @@
             "body": "test return from post"
         }
     ],
+    "paramsExample1Singlue:param1": {
+        "type": "get",
+        "body": {}
+    },
+    "paramsExample2Multiple:param1": [
+        {
+            "type": "get",
+            "body": {}
+        },
+        {
+            "type": "post",
+            "param": "paramOverride",
+            "body": {}
+        }
+    ],
     "responseCodeNot200": {
         "type": "post",
         "body": "woo",

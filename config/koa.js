@@ -7,9 +7,37 @@ const common = require('../common/common');
 
 let router = new Router();
 
+function handleParam(route, routeBlock) {
+    let formattedRoute;
+
+    if (route.includes(':')) {
+        let index = route.indexOf(':');
+        formattedRoute = {
+            route: route.substring(0, index),
+            param: route.substring(index + 1)
+        };
+    }
+
+    //This handles having a param in the array object, having that override the top level param
+    if (formattedRoute && routeBlock.param) {
+        formattedRoute.param = routeBlock.param
+    } else if (routeBlock.param) {
+        formattedRoute = {
+            route,
+            param: routeBlock.param
+        };
+    }
+
+    return formattedRoute;
+}
+
 
 function defaultResponse(route, routeData) {
-    console.log(`${routeData.type.toUpperCase()} - ${route}`.info);
+    if (routeData.param) {
+        console.log(`${routeData.type.toUpperCase()} - ${route}`.info + '/:' + routeData.param.magenta);
+    } else {
+        console.log(`${routeData.type.toUpperCase()} - ${route}`.info);
+    }
     return async function(ctx, next) {
         let code = 200;
         console.dir('routeData');
@@ -35,17 +63,30 @@ function defaultResponse(route, routeData) {
 }
 
 function createRoute(route, routeBlock) {
-    if (routeBlock.type === 'post') {
-        router.post(`/${route}`, defaultResponse(route, routeBlock));
-    }
+    let formattedRoute = handleParam(route, routeBlock);
+    if (formattedRoute) {
+        route = formattedRoute.route;
+        routeBlock.param = formattedRoute.param;
 
-    if (routeBlock.type === 'get') {
-        router.get(`/${route}`, defaultResponse(route, routeBlock));
+        if (routeBlock.type === 'post') {
+            router.post(`/${route}/:${routeBlock.param}`, defaultResponse(route, routeBlock));
+        }
+
+        if (routeBlock.type === 'get') {
+            router.get(`/${route}/:${routeBlock.param}`, defaultResponse(route, routeBlock));
+        }
+    } else {
+        if (routeBlock.type === 'post') {
+            router.post(`/${route}`, defaultResponse(route, routeBlock));
+        }
+
+        if (routeBlock.type === 'get') {
+            router.get(`/${route}`, defaultResponse(route, routeBlock));
+        }
     }
 }
 
 module.exports = function(app, json) {
-
     for (const route in json) {
         if (Array.isArray(json[route])) {
             json[route].forEach((iterativeRoute) => {
