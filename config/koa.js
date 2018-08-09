@@ -62,27 +62,19 @@ function defaultResponse(route, routeData) {
     };
 }
 
+//This is a little hard to understand the lines like:
+//router[routeBlock.type.toLowerCase()](`/${route}`, defaultResponse(route, routeBlock));
+//is esentially doing:
+//router.get('/routeName', func()); where routeBlock.type can be get, post, put, etc...
 function createRoute(route, routeBlock) {
     let formattedRoute = handleParam(route, routeBlock);
     if (formattedRoute) {
         route = formattedRoute.route;
         routeBlock.param = formattedRoute.param;
 
-        if (routeBlock.type === 'post') {
-            router.post(`/${route}/:${routeBlock.param}`, defaultResponse(route, routeBlock));
-        }
-
-        if (routeBlock.type === 'get') {
-            router.get(`/${route}/:${routeBlock.param}`, defaultResponse(route, routeBlock));
-        }
+        router[routeBlock.type.toLowerCase()](`/${route}/:${routeBlock.param}`, defaultResponse(route, routeBlock));
     } else {
-        if (routeBlock.type === 'post') {
-            router.post(`/${route}`, defaultResponse(route, routeBlock));
-        }
-
-        if (routeBlock.type === 'get') {
-            router.get(`/${route}`, defaultResponse(route, routeBlock));
-        }
+        router[routeBlock.type.toLowerCase()](`/${route}`, defaultResponse(route, routeBlock));
     }
 }
 
