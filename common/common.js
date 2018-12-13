@@ -11,11 +11,24 @@ module.exports = {
                         data = JSON.parse(data);
                     } catch (e) {
                         console.error('Please ensure your JSON can be parsed.'.error);
-                        reject(e);
+                        console.log(e);
+                        throw(e);
                     }
                     resolve(data);
                 } else {
                     console.error('Cannot read the file at the location you specified.'.error);
+                    console.log(error);
+                    reject(err);
+                }
+            });
+        });
+    },
+    asyncReaddir: async function asyncReaddir(path) {
+        return new Promise((resolve, reject) => {
+            fs.readdir(path, (err, files) => {
+                if (!err) {
+                    resolve(files)
+                } else {
                     reject(err);
                 }
             });

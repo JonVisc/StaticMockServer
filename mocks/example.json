@@ -43,7 +43,7 @@
             "body": "test return from post"
         }
     ],
-    "paramsExample1Singlue:param1": {
+    "paramsExample1Single:param1": {
         "type": "get",
         "body": {}
     },

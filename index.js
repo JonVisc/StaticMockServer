@@ -4,7 +4,7 @@ const colors = require('colors'),
     path = require('path');
 
 const common = require('./common/common'),
-    koaConfig = require('./config/koa');
+    setup = require('./config/setup');
 
 let base = path.normalize(__dirname);
 
@@ -24,21 +24,21 @@ module.exports = app;
 app.init = async function() {
     console.log('Setting up your StaticMockServer!'.info.underline);
     //console.dir(process.argv);
+    let port = process.env.PORT || 3001;
     if (process.argv.length > 2) {
 
         let json = await common.asyncRead(path.join(base, process.argv[2]));
-        //console.log(json);
-        // koa config
-        koaConfig(app, json);
 
-        // create http and start listening for requests
-        let port = 3001;
-        app.server = app.listen(port);
-        console.log(`StaticMockServer listening on port ${port}`.green);
+        // koa config
+        setup(app, json);
+
     } else {
-        console.error('Need at least one argument, the location of the JSON file.'.red);
-        process.exit(1);
+        console.warn(`Starting up the StaticMockServer with nothing loaded, please make a GET request to  <URL>:${port}/load/ with the filename you want to load from the mocks directory.`.magenta);
+        setup(app);
     }
+    // create http and start listening for requests
+    app.server = app.listen(port);
+    console.log(`StaticMockServer listening on port ${port}`.green);
 };
 
 // auto init if this app is not being initialized by another module (i.e. using require('./app').init();)

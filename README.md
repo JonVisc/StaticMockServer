@@ -45,20 +45,27 @@ FYI: The example.json file is continually updated with new features whenever I u
 
 
 
-Install
-```bash
-$ yarn
-```
-or
+#### Install
 ```bash
 $ npm install
 ```
-
-Start Server
+#### Start Server with File Monitoring
+```bash
+$ nodemon index.js mocks/example.json
+```
+**or**
+```bash
+$ npm run mon
+Then head to a browser and enter the URL: http://localhost:3001/load/example.json
+```
+#### Start Server without File Monitoring (manually restart everytime there is a filechange)
 ```bash
 $ node index.js mocks/example.json
 ```
-or
+**or**
 ```bash
-$ gulp
+$ npm run dev
+Then head to a browser and enter the URL: http://localhost:3001/load/example.json
 ```
+
+An important note, if you create a second json and load it `http://localhost:3001/load/example2.json` the routes from example.json will be cleared.

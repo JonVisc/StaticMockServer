@@ -1,11 +1,7 @@
-'use strict';
+const colors = require('colors')
+    fs = require('fs');
 
-const colors = require('colors'),
-    Router = require('koa-router');
-
-const common = require('../common/common');
-
-let router = new Router();
+const common = require('./common');
 
 function handleParam(route, routeBlock) {
     let formattedRoute;
@@ -31,7 +27,6 @@ function handleParam(route, routeBlock) {
     return formattedRoute;
 }
 
-
 function defaultResponse(route, routeData) {
     if (routeData.param) {
         console.log(`${routeData.type.toUpperCase()} - ${route}`.info + '/:' + routeData.param.magenta);
@@ -40,8 +35,6 @@ function defaultResponse(route, routeData) {
     }
     return async function(ctx, next) {
         let code = 200;
-        console.dir('routeData');
-        console.dir(routeData);
         if (routeData.code && routeData.code !== 200) {
             console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.red);
             code = routeData.code;
@@ -66,7 +59,7 @@ function defaultResponse(route, routeData) {
 //router[routeBlock.type.toLowerCase()](`/${route}`, defaultResponse(route, routeBlock));
 //is esentially doing:
 //router.get('/routeName', func()); where routeBlock.type can be get, post, put, etc...
-function createRoute(route, routeBlock) {
+function createRoute(router, route, routeBlock) {
     let formattedRoute = handleParam(route, routeBlock);
     if (formattedRoute) {
         route = formattedRoute.route;
@@ -76,20 +69,33 @@ function createRoute(route, routeBlock) {
     } else {
         router[routeBlock.type.toLowerCase()](`/${route}`, defaultResponse(route, routeBlock));
     }
+    return router;
 }
 
-module.exports = function(app, json) {
-    for (const route in json) {
-        if (Array.isArray(json[route])) {
-            json[route].forEach((iterativeRoute) => {
-                createRoute(route, iterativeRoute);
-            });
-        } else {
-            createRoute(route, json[route]);
+module.exports = {
+    loadDefaults: async function(app, router) {
+        const path = './controllers/';
+        const files = await common.asyncReaddir(path);
+        files.forEach((file) => {
+            try {
+                //This needs the . before the path variable for a ../ to go up 1 level
+                require(`.${path}${file}`).init(app, router);
+            } catch(e) {
+                console.error(e);
+            }
+        });
+        return router;
+    },
+    jsonRoutes: function(router, json) {
+        for (const route in json) {
+            if (Array.isArray(json[route])) {
+                json[route].forEach((iterativeRoute) => {
+                    router = createRoute(router, route, iterativeRoute);
+                });
+            } else {
+                router = createRoute(router, route, json[route]);
+            }
         }
+        return router;
     }
-
-    app
-    .use(router.routes())
-    .use(router.allowedMethods());
 };

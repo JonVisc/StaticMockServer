@@ -5,15 +5,12 @@
     "main": "index.js",
     "author": "Jon Romanowski",
     "license": "MIT",
-    "dependencies": {
-        "@koa/cors": "2",
-        "colors": "^1.1.2",
-        "gulp": "^3.9.1",
-        "gulp-livereload": "^3.8.1",
-        "gulp-nodemon": "^2.2.1",
-        "gulp-notify": "^3.2.0",
-        "koa": "^2.4.1",
-        "koa-router": "^7.3.0"
+    "scripts": {
+        "start": "node index.js",
+        "mon": "nodemon index.js",
+        "dev": "node index.js",
+        "debug": "node --inspect-brk index.js",
+        "monbug": "nodemon --inspect-brk index.js"
     },
     "keywords": [
         "server",
@@ -35,5 +32,14 @@
     "homepage": "https://github.com/JonVisc/StaticMockServer",
     "engines": {
         "node": ">=7.6"
+    },
+    "dependencies": {
+        "@koa/cors": "2",
+        "colors": "^1.1.2",
+        "koa": "^2.4.1",
+        "koa-router": "^7.3.0"
+    },
+    "devDependencies": {
+        "nodemon": "^1.18.8"
     }
 }
