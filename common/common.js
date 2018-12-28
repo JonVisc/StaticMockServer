@@ -17,7 +17,7 @@ module.exports = {
                     resolve(data);
                 } else {
                     console.error('Cannot read the file at the location you specified.'.error);
-                    console.log(error);
+                    console.log(err);
                     reject(err);
                 }
             });

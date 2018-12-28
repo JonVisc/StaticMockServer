@@ -16,7 +16,7 @@ async function loadFile(ctx, next) {
     routing.loadDefaults(_app, _router);
 
     const filename = ctx.params.file;
-    console.log(`Attempting to load file: ${filename}`.blue);
+    console.log(`Attempting to load file: ${filename}`.blue.underline);
     try {
         const file = await common.asyncRead(`./mocks/${filename}`);
         _router = routing.jsonRoutes(_router, file);
@@ -25,6 +25,7 @@ async function loadFile(ctx, next) {
         .use(_router.routes())
         .use(_router.allowedMethods());
 
+        console.log(`Completed loading of file: ${filename}`.blue.underline);
         ctx.status = 200;
     } catch(err) {
         console.log('caught!');
