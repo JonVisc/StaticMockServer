@@ -35,7 +35,7 @@ function defaultResponse(route, routeData) {
     }
     return async function(ctx, next) {
         let code = 200;
-        if (routeData.code && routeData.code !== 200) {
+        if (routeData.code && routeData.code < 200 || routeData.code > 299) {
             console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.red);
             code = routeData.code;
         } else {
