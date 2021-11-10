@@ -30,7 +30,7 @@ async function loadFile(ctx, next) {
     } catch(err) {
         console.log('caught!');
         if (err) {
-            ctx.body = err;
+            ctx.body = JSON.stringify(err);
             ctx.status = 500;
         } else {
             ctx.body = 'File does not exist.';

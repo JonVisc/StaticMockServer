@@ -43,11 +43,11 @@
             "body": "test return from post"
         }
     ],
-    "paramsExample1Single:param1": {
+    "paramsExample1Single/:param1": {
         "type": "get",
         "body": {}
     },
-    "paramsExample2Multiple:param1": [
+    "paramsExample2Multiple/:param1": [
         {
             "type": "get",
             "body": {}
@@ -58,6 +58,18 @@
             "body": {}
         }
     ],
+    ":paramsExample3/staticRouteAfterParam": {
+        "type": "get",
+        "body": {
+            "type": "Example3" 
+        }
+    },
+    ":paramsExample4/:anotherParam": {
+        "type": "get",
+        "body": {
+            "type": "Example4" 
+        }
+    },
     "responseCodeNot200": {
         "type": "post",
         "body": "woo",
@@ -68,5 +80,4 @@
         "body": {},
         "code": 200
     }
-
 }

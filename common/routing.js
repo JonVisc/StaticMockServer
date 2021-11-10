@@ -1,60 +1,43 @@
 const colors = require('colors')
-    fs = require('fs');
+    fs = require('fs')
 
-const common = require('./common');
+const common = require('./common')
 
-function handleParam(route, routeBlock) {
-    let formattedRoute;
+function defaultResponse(route, routeBlock) {
+    const routeArray = route.split('/')
 
-    if (route.includes(':')) {
-        let index = route.indexOf(':');
-        formattedRoute = {
-            route: route.substring(0, index),
-            param: route.substring(index + 1)
-        };
-    }
+    routeArray.forEach((part, i) => {
+        if (part.startsWith(':')) {
+            routeArray[i] = part.magenta
+        } else {
+            routeArray[i] = part.info
+        }
+    })
+    console.log(routeArray.join('/'))
 
-    //This handles having a param in the array object, having that override the top level param
-    if (formattedRoute && routeBlock.param) {
-        formattedRoute.param = routeBlock.param
-    } else if (routeBlock.param) {
-        formattedRoute = {
-            route,
-            param: routeBlock.param
-        };
-    }
-
-    return formattedRoute;
-}
-
-function defaultResponse(route, routeData) {
-    if (routeData.param) {
-        console.log(`${routeData.type.toUpperCase()} - ${route}`.info + '/:' + routeData.param.magenta);
-    } else {
-        console.log(`${routeData.type.toUpperCase()} - ${route}`.info);
-    }
     return async function(ctx, next) {
-        let code = 200;
-        if (routeData.code) {
-            code = routeData.code;
+        let code = 200
+        if (routeBlock.code) {
+            code = routeBlock.code
         }
         if (code < 200 || code > 299) {
-            console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.red);
+            console.log(`${routeBlock.type.toUpperCase()} - ${route} - Called`.red)
         } else {
-            console.log(`${routeData.type.toUpperCase()} - ${route} - Called`.cyan);
+            console.log(`${routeBlock.type.toUpperCase()} - ${route} - Called`.cyan)
         }
 
-        if (routeData.headers && routeData.headers.length > 0) {
-            routeData.headers.forEach(header => {
-                ctx.set(header);
-            });
+        if (routeBlock.headers && routeBlock.headers.length > 0) {
+            routeBlock.headers.forEach(header => {
+                ctx.set(header)
+            })
         }
-        if (routeData.latency) {
-            await common.wait(routeData.latency);
+        if (routeBlock.latency) {
+            console.log(`Latency detected, waiting: ${routeBlock.latency / 1000} seconds`.red)
+            await common.wait(routeBlock.latency)
         }
-        ctx.body = routeData.body;
-        ctx.status = code;
-    };
+        ctx.body = routeBlock.body
+        ctx.status = code
+    }
 }
 
 //This is a little hard to understand the lines like:
@@ -62,42 +45,38 @@ function defaultResponse(route, routeData) {
 //is esentially doing:
 //router.get('/routeName', func()); where routeBlock.type can be get, post, put, etc...
 function createRoute(router, route, routeBlock) {
-    let formattedRoute = handleParam(route, routeBlock);
-    if (formattedRoute) {
-        route = formattedRoute.route;
-        routeBlock.param = formattedRoute.param;
+    let routeMethod = 'get'
+    routeMethod = routeBlock.method || routeBlock.type
+    routeMethod = routeMethod.toLowerCase() 
 
-        router[routeBlock.type.toLowerCase()](`/${route}/:${routeBlock.param}`, defaultResponse(route, routeBlock));
-    } else {
-        router[routeBlock.type.toLowerCase()](`/${route}`, defaultResponse(route, routeBlock));
-    }
-    return router;
+    router[routeMethod](`/${route}`, defaultResponse(route, routeBlock))
+    return router
 }
 
 module.exports = {
     loadDefaults: async function(app, router) {
-        const path = './controllers/';
-        const files = await common.asyncReaddir(path);
+        const path = './controllers/'
+        const files = await common.asyncReaddir(path)
         files.forEach((file) => {
             try {
                 //This needs the . before the path variable for a ../ to go up 1 level
-                require(`.${path}${file}`).init(app, router);
+                require(`.${path}${file}`).init(app, router)
             } catch(e) {
-                console.error(e);
+                console.error(e)
             }
-        });
-        return router;
+        })
+        return router
     },
     jsonRoutes: function(router, json) {
         for (const route in json) {
             if (Array.isArray(json[route])) {
                 json[route].forEach((iterativeRoute) => {
-                    router = createRoute(router, route, iterativeRoute);
-                });
+                    router = createRoute(router, route, iterativeRoute)
+                })
             } else {
-                router = createRoute(router, route, json[route]);
+                router = createRoute(router, route, json[route])
             }
         }
-        return router;
+        return router
     }
-};
+}
