@@ -29,6 +29,7 @@ async function loadFile(ctx, next) {
         ctx.status = 200;
     } catch(err) {
         console.log('caught!');
+        console.log(err)
         if (err) {
             ctx.body = JSON.stringify(err);
             ctx.status = 500;

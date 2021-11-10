@@ -4,6 +4,9 @@ const colors = require('colors')
 const common = require('./common')
 
 function defaultResponse(route, routeBlock) {
+    let routeMethod = 'get'
+    routeMethod = routeBlock.method || routeBlock.type
+    routeMethod = routeMethod.toUpperCase() 
     const routeArray = route.split('/')
 
     routeArray.forEach((part, i) => {
@@ -13,7 +16,7 @@ function defaultResponse(route, routeBlock) {
             routeArray[i] = part.info
         }
     })
-    console.log(routeArray.join('/'))
+    console.log(`${routeMethod} - ${routeArray.join('/')}`)
 
     return async function(ctx, next) {
         let code = 200
@@ -40,14 +43,10 @@ function defaultResponse(route, routeBlock) {
     }
 }
 
-//This is a little hard to understand the lines like:
-//router[routeBlock.type.toLowerCase()](`/${route}`, defaultResponse(route, routeBlock));
-//is esentially doing:
-//router.get('/routeName', func()); where routeBlock.type can be get, post, put, etc...
 function createRoute(router, route, routeBlock) {
     let routeMethod = 'get'
     routeMethod = routeBlock.method || routeBlock.type
-    routeMethod = routeMethod.toLowerCase() 
+    routeMethod = routeMethod.toLowerCase()
 
     router[routeMethod](`/${route}`, defaultResponse(route, routeBlock))
     return router
